@@ -22,11 +22,15 @@ detector = FER(mtcnn=True)
 #cap = cv2.VideoCapture(0)
 
 #Inicializar a camera do esp32 cam
-cap = cv2.VideoCapture('http://172.16.0.42:81/stream')
+#cap = cv2.VideoCapture('http://172.16.0.42:81/stream')
+cap = cv2.VideoCapture(0)
 
 # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640) #tam da captura (lembrar de verificar se minha camera aceita)
 # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 # cap.set(cv2.CAP_PROP_FPS, 10)
+
+# Variável para armazenar as emoções detectadas
+detected_emotions = []
 
 while True:
     # Ler um frame da webcam
@@ -37,6 +41,10 @@ while True:
 
     # Detectar emoções no frame
     emotions = detector.detect_emotions(frame)
+
+    # Adicionar emoções detectadas à lista
+    if emotions:
+        detected_emotions.extend(emotions)
 
     # Exibir a emoção detectada na imagem
     if emotions:
@@ -52,6 +60,15 @@ while True:
     # Parar a execução se a tecla 'q' for pressionada
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+
+# Converter as emoções detectadas em uma string
+emotion_string = ""
+for face in detected_emotions:
+    emotion = max(face['emotions'], key=face['emotions'].get)
+    emotion_string += f"Emotion: {emotion}\n"
+
+# Imprimir a string com as emoções detectadas
+print(emotion_string)
 
 # Liberar a webcam e fechar a janela
 cap.release()
