@@ -1,18 +1,17 @@
 from fer import FER
 import cv2
-import tensorflow as tf
+import pandas as pd
+import os
 
 # Inicializar o detector de emoções
 detector = FER(mtcnn=False)
 
-#Inicializar a camera do esp32 cam
-#cap = cv2.VideoCapture('http://172.16.0.42:81/stream')
+# Inicializar a webcam
 cap = cv2.VideoCapture(0)
 
-# cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640) #tam da captura (lembrar de verificar se minha camera aceita)
-# cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-# cap.set(cv2.CAP_PROP_FPS, 10)
+# Lista para armazenar as emoções detectadas
 detected_emotions = []
+
 while True:
     # Ler um frame da webcam
     ret, frame = cap.read()
@@ -42,8 +41,23 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-
-
 # Liberar a webcam e fechar a janela
 cap.release()
 cv2.destroyAllWindows()
+
+# Calcular a emoção mais predominante durante o reconhecimento
+if detected_emotions:
+    emotions_df = pd.DataFrame(detected_emotions)
+    most_common_emotion = emotions_df['emotions'].mode()
+
+    if not most_common_emotion.empty:
+        most_common_emotion_str = most_common_emotion.to_string(index=False)
+
+        # Salvar a emoção mais predominante no arquivo de texto (usando um caminho absoluto)
+        file_path = os.path.abspath("C:\\Users\\caduc\\Documents\\meu-tcc\\deteFace\\fer\\emotions.txt")
+        with open(file_path, 'w') as f:
+            f.write(most_common_emotion_str)
+    else:
+        print("Nenhuma emoção predominante detectada.")
+else:
+    print("Nenhuma emoção detectada.")
