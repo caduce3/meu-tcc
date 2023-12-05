@@ -3,12 +3,28 @@ import cv2
 import tensorflow as tf
 import datetime
 import os
+import socket
+import pygame
+import random
+
+# Função para processar a mensagem e acionar o Arduino
+def processar_mensagem(message):
+    if message == 'happy':
+        ser.write('0'.encode())  # Substitua '0' pela lógica adequada para 'happy'
+    elif message == 'sad':
+        ser.write('1'.encode())  # Substitua '1' pela lógica adequada para 'sad'
+    elif message == 'angry':
+        ser.write('2'.encode())  # Substitua '2' pela lógica adequada para 'angry'
+    # ... Adicione mais lógica para outras emoções conforme necessário
 
 # Inicializar o detector de emoções
-detector = FER(mtcnn=False)
+detector = FER(mtcnn=True)
 
 # Inicializar a webcam
 cap = cv2.VideoCapture(0)
+
+# Configurar a porta serial
+ser = serial.Serial('COM5', 9600)
 
 # Encontrar o próximo número de arquivo disponível
 file_number = 1
@@ -46,6 +62,9 @@ while True:
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
             output_line = f"{timestamp}: {emotion} - {face['emotions'][emotion]}\n"
             output_file.write(output_line)
+
+            # Processar a mensagem e acionar o Arduino
+            processar_mensagem(emotion)
 
     # Exibir o frame com a detecção de emoção
     cv2.imshow('Webcam', frame)
