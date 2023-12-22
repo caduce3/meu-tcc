@@ -6,16 +6,50 @@ import os
 import socket
 import pygame
 import random
+import serial
+import time
+
+pygame.mixer.init()
+
+# Caminho absoluto para o diretório dos arquivos de áudio C2
+audio_directory = r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-speaks'
+
 
 # Função para processar a mensagem e acionar o Arduino
 def processar_mensagem(message):
+    audio_file = None
+    base_path = r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-speaks'
+    
     if message == 'happy':
-        ser.write('0'.encode())  # Substitua '0' pela lógica adequada para 'happy'
+        ser.write('0'.encode())
+        audio_file = os.path.join(base_path, 'happy', 'happy1.mp3')   
     elif message == 'sad':
-        ser.write('1'.encode())  # Substitua '1' pela lógica adequada para 'sad'
+        ser.write('1'.encode())  
+        audio_file = os.path.join(base_path, 'sad', 'sad1.mp3')  
     elif message == 'angry':
-        ser.write('2'.encode())  # Substitua '2' pela lógica adequada para 'angry'
-    # ... Adicione mais lógica para outras emoções conforme necessário
+        ser.write('2'.encode())
+        audio_file = os.path.join(base_path, 'angry', 'raiva1.mp3')  
+    elif message == 'fear':
+        ser.write('3'.encode())
+        audio_file = os.path.join(base_path, 'fear', 'fear1.mp3')  
+    elif message == 'disgust':
+        ser.write('4'.encode())
+        audio_file = os.path.join(base_path, 'disgust', 'disgust.mp3')  
+    elif message == 'surprise':
+        ser.write('5'.encode())
+        audio_file = os.path.join(base_path, 'surprise', 'surprise1.mp3')  
+    elif message == 'neutral':
+        ser.write('6'.encode())
+        #audio_file = os.path.join(r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-\neutral', 'happy1.mp3')  
+    else:
+        print("Mensagem não reconhecida")
+
+    if audio_file is not None and message in ["happy", "sad", "angry", "fear", "disgust", "surprise", "neutral"]:
+        sound = pygame.mixer.Sound(audio_file)
+        sound.play()
+        pygame.time.wait(int(sound.get_length() * 1000))
+
+        time.sleep(5)
 
 # Inicializar o detector de emoções
 detector = FER(mtcnn=True)
