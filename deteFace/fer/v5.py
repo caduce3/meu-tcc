@@ -49,7 +49,7 @@ def processar_mensagem(message):
         sound.play()
         pygame.time.wait(int(sound.get_length() * 1000))
 
-        time.sleep(5)
+        #time.sleep(5)
 
 # Inicializar o detector de emoções
 detector = FER(mtcnn=True)
