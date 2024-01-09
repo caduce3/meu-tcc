@@ -1,0 +1,14 @@
+2024-01-08 22:34:32.857088: neutral - 0.79
+2024-01-08 22:34:33.673045: neutral - 0.65
+2024-01-08 22:34:34.405079: neutral - 0.58
+2024-01-08 22:34:35.162724: neutral - 0.85
+
+
+Media das Taxas de Emocao:
+happy: 0.0
+sad: 0.0
+angry: 0.0
+surprise: 0.0
+neutral: 0.7175
+fear: 0.0
+disgust: 0.0

@@ -11,46 +11,6 @@ import time
 
 pygame.mixer.init()
 
-# Caminho absoluto para o diretório dos arquivos de áudio C2
-audio_directory = r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-speaks'
-
-
-# Função para processar a mensagem e acionar o Arduino
-def processar_mensagem(message):
-    audio_file = None
-    base_path = r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-speaks'
-    
-    if message == 'happy':
-        ser.write('0'.encode())
-        audio_file = os.path.join(base_path, 'happy', 'happy1.mp3')   
-    elif message == 'sad':
-        ser.write('1'.encode())  
-        audio_file = os.path.join(base_path, 'sad', 'sad1.mp3')  
-    elif message == 'angry':
-        ser.write('2'.encode())
-        audio_file = os.path.join(base_path, 'angry', 'raiva1.mp3')  
-    elif message == 'fear':
-        ser.write('3'.encode())
-        audio_file = os.path.join(base_path, 'fear', 'fear1.mp3')  
-    elif message == 'disgust':
-        ser.write('4'.encode())
-        audio_file = os.path.join(base_path, 'disgust', 'disgust.mp3')  
-    elif message == 'surprise':
-        ser.write('5'.encode())
-        audio_file = os.path.join(base_path, 'surprise', 'surprise1.mp3')  
-    elif message == 'neutral':
-        ser.write('6'.encode())
-        #audio_file = os.path.join(r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-\neutral', 'happy1.mp3')  
-    else:
-        print("Mensagem não reconhecida")
-
-    if audio_file is not None and message in ["happy", "sad", "angry", "fear", "disgust", "surprise", "neutral"]:
-        sound = pygame.mixer.Sound(audio_file)
-        sound.play()
-        pygame.time.wait(int(sound.get_length() * 1000))
-
-        #time.sleep(5)
-
 # Inicializar o detector de emoções
 detector = FER(mtcnn=True)
 
@@ -62,6 +22,51 @@ ser = serial.Serial('COM5', 9600)
 
 # Encontrar o próximo número de arquivo disponível
 file_number = 1
+
+
+base_path = r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-speaks'
+audio_inicial = os.path.join(base_path, 'happy', 'entrada.mp3')
+som_inicial = pygame.mixer.Sound(audio_inicial)
+som_inicial.play()
+
+# Função para processar a mensagem e acionar o Arduino
+def processar_mensagem(message):
+    # audio_file = None
+    # base_path = r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-speaks'
+    if message == 'happy':
+        ser.write('0'.encode())
+        #audio_file = os.path.join(base_path, 'happy', 'happy1.mp3')   
+    elif message == 'sad':
+        ser.write('1'.encode())  
+        #audio_file = os.path.join(base_path, 'sad', 'sad1.mp3')  
+    elif message == 'angry':
+        ser.write('2'.encode())
+        #audio_file = os.path.join(base_path, 'angry', 'raiva1.mp3')  
+    elif message == 'fear':
+        ser.write('3'.encode())
+        #audio_file = os.path.join(base_path, 'fear', 'fear1.mp3')  
+    elif message == 'disgust':
+        ser.write('4'.encode())
+        #audio_file = os.path.join(base_path, 'disgust', 'disgust.mp3')  
+    elif message == 'surprise':
+        ser.write('5'.encode())
+        #audio_file = os.path.join(base_path, 'surprise', 'surprise1.mp3')  
+    elif message == 'neutral':
+        ser.write('6'.encode())
+    elif message == 'entrada':
+        ser.write('9'.encode())
+        #audio_file = os.path.join(r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-\neutral', 'happy1.mp3')  
+    else:
+        print("Mensagem não reconhecida")
+
+    # if audio_file is not None and message in ["happy", "sad", "angry", "fear", "disgust", "surprise", "neutral"]:
+    #     sound = pygame.mixer.Sound(audio_file)
+    #     sound.play()
+    #     pygame.time.wait(int(sound.get_length() * 1000))
+
+    #     time.sleep(5)
+
+
 while os.path.exists(f"emotions_output_{file_number}.txt"):
     file_number += 1
 
@@ -98,6 +103,7 @@ while True:
             output_file.write(output_line)
 
             # Processar a mensagem e acionar o Arduino
+            
             processar_mensagem(emotion)
 
     # Exibir o frame com a detecção de emoção
