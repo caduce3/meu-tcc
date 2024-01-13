@@ -25,7 +25,7 @@ file_number = 1
 
 
 base_path = r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-speaks'
-audio_inicial = os.path.join(base_path, 'happy', 'entrada.mp3')
+audio_inicial = os.path.join(base_path, 'happy', 'entrada1.mp3')
 som_inicial = pygame.mixer.Sound(audio_inicial)
 som_inicial.play()
 
@@ -111,6 +111,10 @@ while True:
 
     # Parar a execução se a tecla 'q' for pressionada
     if cv2.waitKey(1) & 0xFF == ord('q'):
+        audio_final = os.path.join(base_path, 'happy', 'saida1.mp3')
+        som_final = pygame.mixer.Sound(audio_final)
+        som_final.play()
+        time.sleep(5)
         break
 
 # Calcular a média das taxas de emoção
@@ -127,5 +131,6 @@ output_file.close()
 # Liberar a webcam e fechar a janela
 cap.release()
 cv2.destroyAllWindows()
+
 
 print(f"As taxas de emoções foram salvas em {output_file_path}")
