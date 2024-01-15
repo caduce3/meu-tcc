@@ -25,9 +25,9 @@ file_number = 1
 
 
 base_path = r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-speaks'
-# audio_inicial = os.path.join(base_path, 'happy', 'entrada1.mp3')
-# som_inicial = pygame.mixer.Sound(audio_inicial)
-# som_inicial.play()
+audio_inicial = os.path.join(base_path, 'happy', 'entrada1.mp3')
+som_inicial = pygame.mixer.Sound(audio_inicial)
+som_inicial.play()
 
 # Função para processar a mensagem e acionar o Arduino
 def processar_mensagem(message):
