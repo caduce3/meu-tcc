@@ -110,7 +110,7 @@ while True:
     cv2.imshow('Webcam', frame)
 
     # Parar a execução se a tecla 'q' for pressionada
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('w'):
         audio_final = os.path.join(base_path, 'happy', 'saida1.mp3')
         som_final = pygame.mixer.Sound(audio_final)
         som_final.play()
