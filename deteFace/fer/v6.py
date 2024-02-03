@@ -91,6 +91,7 @@ total_frames = 0
 last_emotion1 = None
 last_emotion2 = None
 last_emotion3 = None
+lista_de_emocoes = []
 
 while True:
     # Ler um frame da webcam
@@ -134,14 +135,19 @@ while True:
             # Após a reprodução da piada, usar a última emoção detectada
             if total_frames == 42:
                 last_emotion1 = emotion
+                lista_de_emocoes.append(last_emotion1)
                 processar_mensagem_audio(last_emotion1)
             if total_frames == 62 :
                 last_emotion2 = emotion
                 processar_mensagem_audio(last_emotion2)
+                lista_de_emocoes.append(last_emotion2)
             if total_frames == 82:
                 last_emotion3 = emotion
                 processar_mensagem_audio(last_emotion3)
+                lista_de_emocoes.append(last_emotion3)
        
+
+    
 
     # Exibir o frame com a detecção de emoção
     cv2.imshow('Webcam', frame)
@@ -149,11 +155,35 @@ while True:
     # Parar a execução se a tecla 'q' for pressionada
     if cv2.waitKey(1) & 0xFF == ord('w'):
         ser.write("9".encode())
-        audio_final = os.path.join(base_path, 'saida1.mp3')
-        som_final = pygame.mixer.Sound(audio_final)
-        som_final.play()
         time.sleep(8)
+        print(lista_de_emocoes)
         break
+
+if lista_de_emocoes:
+    most_common_emotion = max(set(lista_de_emocoes), key=lista_de_emocoes.count)
+    print(f"Emoção mais frequente: {most_common_emotion}")
+
+    # Play audio based on the most frequent emotion
+    if most_common_emotion == 'happy' or most_common_emotion == 'surprise':
+        audio = os.path.join(base_path, 'emocoes_audios', 'mais-happy.mp3')
+        som = pygame.mixer.Sound(audio)
+        som.play()
+    elif most_common_emotion == 'sad':
+        audio = os.path.join(base_path, 'emocoes_audios', 'mais-triste.mp3')
+        som = pygame.mixer.Sound(audio)
+        som.play()
+    elif most_common_emotion == 'angry' or most_common_emotion == 'disgust' or most_common_emotion == 'fear':
+        audio = os.path.join(base_path, 'emocoes_audios', 'mais-raiva.mp3')
+        som = pygame.mixer.Sound(audio)
+        som.play()
+    elif most_common_emotion == 'neutral':
+        audio = os.path.join(base_path, 'emocoes_audios', 'mais-neutro.mp3')
+        som = pygame.mixer.Sound(audio)
+        som.play()
+    else:
+        print("Emoção não reconhecida")
+else:
+    print("Lista de emoções vazia.")
 
 # Fechar o arquivo de texto
 output_file.close()
