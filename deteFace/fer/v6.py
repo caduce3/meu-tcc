@@ -23,49 +23,60 @@ ser = serial.Serial('COM5', 9600)
 # Encontrar o próximo número de arquivo disponível
 file_number = 1
 
-
 base_path = r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-speaks\estudoParte2'
-# audio_inicial = os.path.join(base_path, 'happy', 'entrada1.mp3')
-# som_inicial = pygame.mixer.Sound(audio_inicial)
-# som_inicial.play()
+audio_inicial = os.path.join(base_path, 'entrada2.mp3')
+
+pygame.mixer.init()
+pygame.mixer.music.load(audio_inicial)
+pygame.mixer.music.play()
 
 # Função para processar a mensagem e acionar o Arduino
-def processar_mensagem(message):
-    # audio_file = None
-    # base_path = r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-speaks'
+def processar_mensagem_arduino(message):
     if message == 'happy':
         ser.write('0'.encode())
-        #audio_file = os.path.join(base_path, 'happy', 'happy1.mp3')   
     elif message == 'sad':
         ser.write('1'.encode())  
-        #audio_file = os.path.join(base_path, 'sad', 'sad1.mp3')  
     elif message == 'angry':
         ser.write('2'.encode())
-        #audio_file = os.path.join(base_path, 'angry', 'raiva1.mp3')  
     elif message == 'fear':
         ser.write('3'.encode())
-        #audio_file = os.path.join(base_path, 'fear', 'fear1.mp3')  
     elif message == 'disgust':
         ser.write('4'.encode())
-        #audio_file = os.path.join(base_path, 'disgust', 'disgust.mp3')  
     elif message == 'surprise':
         ser.write('5'.encode())
-        #audio_file = os.path.join(base_path, 'surprise', 'surprise1.mp3')  
     elif message == 'neutral':
         ser.write('6'.encode())
     elif message == 'entrada':
         ser.write('9'.encode())
-        #audio_file = os.path.join(r'C:\Users\caduc\Documents\meuTcc\deteFace\apython-\neutral', 'happy1.mp3')  
     else:
         print("Mensagem não reconhecida")
 
-    # if audio_file is not None and message in ["happy", "sad", "angry", "fear", "disgust", "surprise", "neutral"]:
-    #     sound = pygame.mixer.Sound(audio_file)
-    #     sound.play()
-    #     pygame.time.wait(int(sound.get_length() * 1000))
+def reproduzir_piada(numero):
+    audio_piada = os.path.join(base_path, f'emocoes_audios\\piadas\\piada{numero}.mp3')
+    som_piada = pygame.mixer.Sound(audio_piada)
+    som_piada.play()
+    while pygame.mixer.get_busy():
+        pygame.time.Clock().tick(10)
 
-    #     time.sleep(5)
-
+def processar_mensagem_audio(message):
+    if message == 'happy' or message == 'surprise':
+        audio = os.path.join(base_path, 'emocoes_audios', 'feliz', 'happyAudio.mp3')
+        som = pygame.mixer.Sound(audio)
+        som.play()
+    elif message == 'sad':
+        audio = os.path.join(base_path, 'emocoes_audios', 'sad', 'sadAudio.mp3')
+        som = pygame.mixer.Sound(audio)
+        som.play()
+    elif message == 'angry' or message == 'disgust' or message == 'fear':
+        audio = os.path.join(base_path, 'emocoes_audios', 'angry', 'angryAudio.mp3')
+        som = pygame.mixer.Sound(audio)
+        som.play()
+    elif message == 'neutral':
+        audio = os.path.join(base_path, 'emocoes_audios', 'neutral', 'neutralAudio.mp3')
+        som = pygame.mixer.Sound(audio)
+        som.play()
+    else:
+        print("Mensagem não reconhecida")
 
 while os.path.exists(f"emotions_output_{file_number}.txt"):
     file_number += 1
@@ -77,6 +88,10 @@ output_file = open(output_file_path, "w")
 detected_emotions = {'happy': 0, 'sad': 0, 'angry': 0, 'surprise': 0, 'neutral': 0, 'fear': 0, 'disgust': 0}
 total_frames = 0
 
+last_emotion1 = None
+last_emotion2 = None
+last_emotion3 = None
+
 while True:
     # Ler um frame da webcam
     ret, frame = cap.read()
@@ -86,6 +101,7 @@ while True:
 
     # Detectar emoções no frame
     emotions = detector.detect_emotions(frame)
+    print(emotions)
 
     if emotions:
         total_frames += 1
@@ -102,10 +118,30 @@ while True:
             output_line = f"{timestamp}: {emotion} - {face['emotions'][emotion]}\n"
             output_file.write(output_line)
 
-            # Processar a mensagem e acionar o Arduino
-            processar_mensagem(emotion)
+            
+            processar_mensagem_arduino(emotion)
+            
+            if total_frames == 30:
+                reproduzir_piada(1)
+                
+            elif total_frames == 50:
+                reproduzir_piada(2)
+                
+            elif total_frames == 70:  
+                reproduzir_piada(3)
+                
 
-    
+            # Após a reprodução da piada, usar a última emoção detectada
+            if total_frames == 42:
+                last_emotion1 = emotion
+                processar_mensagem_audio(last_emotion1)
+            if total_frames == 62 :
+                last_emotion2 = emotion
+                processar_mensagem_audio(last_emotion2)
+            if total_frames == 82:
+                last_emotion3 = emotion
+                processar_mensagem_audio(last_emotion3)
+       
 
     # Exibir o frame com a detecção de emoção
     cv2.imshow('Webcam', frame)
