@@ -15,7 +15,8 @@ pygame.mixer.init()
 detector = FER(mtcnn=True)
 
 # Inicializar a webcam
-cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('http://172.16.0.43:81/stream')
 
 # Configurar a porta serial
 ser = serial.Serial('COM5', 9600)
