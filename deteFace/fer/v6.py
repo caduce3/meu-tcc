@@ -15,7 +15,7 @@ pygame.mixer.init()
 detector = FER(mtcnn=True)
 
 # Inicializar a webcam
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 # Configurar a porta serial
 ser = serial.Serial('COM5', 9600)
@@ -122,7 +122,7 @@ while True:
             
             processar_mensagem_arduino(emotion)
             
-            if total_frames == 20:
+            if total_frames == 25:
                 reproduzir_piada(1)
                 
             if total_frames == 42:
