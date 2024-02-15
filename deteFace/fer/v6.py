@@ -33,17 +33,17 @@ pygame.mixer.music.play()
 # Função para processar a mensagem e acionar o Arduino
 def processar_mensagem_arduino(message):
     if message == 'happy':
-        ser.write('0'.encode())
+        ser.write('6'.encode())
     elif message == 'sad':
-        ser.write('1'.encode())  
+        ser.write('6'.encode())
     elif message == 'angry':
-        ser.write('2'.encode())
+        ser.write('6'.encode())
     elif message == 'fear':
-        ser.write('3'.encode())
+        ser.write('6'.encode())
     elif message == 'disgust':
-        ser.write('4'.encode())
+        ser.write('6'.encode())
     elif message == 'surprise':
-        ser.write('5'.encode())
+        ser.write('6'.encode())
     elif message == 'neutral':
         ser.write('6'.encode())
     elif message == 'entrada':
