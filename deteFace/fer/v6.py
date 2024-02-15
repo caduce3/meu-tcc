@@ -122,29 +122,35 @@ while True:
             
             processar_mensagem_arduino(emotion)
             
-            if total_frames == 25:
+            if total_frames == 30:
+                ser.write("9".encode())
                 reproduzir_piada(1)
+                ser.write("9".encode())
                 
-            if total_frames == 42:
+            if total_frames == 47:
+                ser.write("9".encode())
                 reproduzir_piada(2)
+                ser.write("9".encode())
                 
-            # elif total_frames == 70:  
-            #     reproduzir_piada(3)
+            elif total_frames == 65:  
+                ser.write("9".encode())
+                reproduzir_piada(3)
+                ser.write("9".encode())
                 
 
             # Após a reprodução da piada, usar a última emoção detectada
-            if total_frames == 28:
+            if total_frames == 35:
                 last_emotion1 = emotion
                 lista_de_emocoes.append(last_emotion1)
                 processar_mensagem_audio(last_emotion1)
-            if total_frames == 48 :
+            if total_frames == 52 :
                 last_emotion2 = emotion
                 processar_mensagem_audio(last_emotion2)
                 lista_de_emocoes.append(last_emotion2)
-            # if total_frames == 82:
-            #     last_emotion3 = emotion
-            #     processar_mensagem_audio(last_emotion3)
-            #     lista_de_emocoes.append(last_emotion3)
+            if total_frames == 73:
+                last_emotion3 = emotion
+                processar_mensagem_audio(last_emotion3)
+                lista_de_emocoes.append(last_emotion3)
 
     # Exibir o frame com a detecção de emoção
     cv2.imshow('Webcam', frame)
