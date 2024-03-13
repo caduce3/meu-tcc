@@ -1,9 +1,9 @@
-happy = 0
-neutral = 24
-surprise = 5
+happy = 50
+neutral = 36
+surprise = 2
 sad = 0
 angry = 0
-fear = 1
+fear = 0
 disgust = 0
 
 def calcularPorcentagem(happy, neutral, surprise, sad, angry, fear, disgust):
